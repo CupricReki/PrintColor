@@ -55,4 +55,4 @@ def update_huelight(color, brightness):
     if brightness != '':
         brightness = 255
 
-    # Takes in the desired color (in RGB) and translates it into the correct x,y color
+    # Takes in the desired color (in RGB) and translates it into the correct x,y colord
