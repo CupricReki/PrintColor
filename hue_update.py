@@ -20,7 +20,7 @@ Sync RGBW neopixel strip to temperature
 Sync RGBW neopixel strip to print status by filling up a bar
 
 Octoprint:
-
+# Use api key
 http://docs.octoprint.org/en/master/api/
 
 
