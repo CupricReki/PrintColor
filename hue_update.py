@@ -70,6 +70,7 @@ if __name__ == '__main__':
     # Intialize the library (must be called once before other functions).
     #strip.begin()
     while True:
-        print(octoprint_getstatus())
+        print(octoprint_getstatus()[1])
+        print{}
         print
         time.sleep(50)
