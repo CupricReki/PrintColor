@@ -64,12 +64,14 @@ def set_led(status):
     bed_target = status[1]
     print status
 
-    if bed_target > 0 and bed_target != bed_start:
+    if bed_target > 0:
         temperature_percent = int(round(100*((bed_actual - bed_start) / (bed_target - bed_start))))
         bed_target_last = bed_target
-    else:
-        temperature_percent = temperature_percent = int(round(100*((bed_actual - bed_start) / (bed_target_last - bed_start))))
+
+    if bed_target == 0:
+        temperature_percent = int(round(100*((bed_actual - bed_start) / (bed_target_last - bed_start))))
     print temperature_percent
+
     for j in xrange(0, temperature_percent):
         strip.setPixelColor(j, Color(0, 255, 0))
     for j in xrange(temperature_percent, LED_COUNT):
