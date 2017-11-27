@@ -67,6 +67,7 @@ def set_led(status):
         temperature_percent = 0
     print temperature_percent
     for j in range(0, temperature_percent):
+        print j
         strip.setPixelColor(j, Color(255, 0, 0))
         strip.show()
 
