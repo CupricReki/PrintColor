@@ -72,5 +72,5 @@ if __name__ == '__main__':
     while True:
         status = octoprint_getstatus()
         set_led(status)
-        time.sleep(50)
+        time.sleep(1)
 
