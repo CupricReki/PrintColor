@@ -59,13 +59,13 @@ def octoprint_getstatus():
 def set_led(status):
     # [bed_actual, bed_target]
     bed_start = 25
-    print status
     bed_actual = status[0]
     bed_target = status[1]
     if bed_target != 0 or bed_target == bed_start:
         temperature_percent = int(round(100*((bed_actual - bed_start) / (bed_target - bed_start))))
     else:
         temperature_percent = 0
+    print temperature_percent
     for j in range(0, temperature_percent):
         strip.setPixelColor(j, Color(255, 0, 0))
         strip.show()
