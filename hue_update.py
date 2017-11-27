@@ -37,7 +37,7 @@ from neopixel import *
 
 octoprint_api = '56D0FF611C184738B2CAE37CE1F7446F'
 octoprint_ip = 'printerpi.lan'
-LED_COUNT      = 100      # Number of LED pixels.
+LED_COUNT      = 220      # Number of LED pixels.
 LED_PIN        = 18      # GPIO pin connected to the pixels (must support PWM!).
 LED_FREQ_HZ    = 800000  # LED signal frequency in hertz (usually 800khz)
 LED_DMA        = 5       # DMA channel to use for generating signal (try 5)
