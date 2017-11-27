@@ -7,19 +7,12 @@
 # Initial script
 
 # Purpose
-Translate printer status into light indication code
+# Translate printer status into light indication code
 
 
-TODO
+import requests
 
-Read states from octoprint
-Write RGB to hue lights
-Sync Hue light to temperature
-Sync Hue light to printer status
-Sync RGBW neopixel strip to temperature
-Sync RGBW neopixel strip to print status by filling up a bar
-
-Octoprint:
+#Octoprint:
 # Use api key
 http://docs.octoprint.org/en/master/api/
 
@@ -38,14 +31,12 @@ https://github.com/studioimaginaire/phue
 # debug = 0 - off
 # debug = 1 -
 
-octoprint_api = 'apikey'
+octoprint_api = '56D0FF611C184738B2CAE37CE1F7446F'
 octoprint_ip = '10.10.0.110'
 
 
 def get_octoprint_temp():
     # Get target and current temperature
-
-    if debug
 
 
 def get_octoprint_status():
@@ -56,3 +47,5 @@ def update_huelight(color, brightness):
         brightness = 255
 
     # Takes in the desired color (in RGB) and translates it into the correct x,y colord
+
+while true:
