@@ -56,11 +56,13 @@ def octoprint_getstatus():
     parsed_request = json.loads(request.content)
     bed_actual = parsed_request['temperature']['bed']['actual']
     bed_target = parsed_request['temperature']['bed']['target']
-    return(bed_actual, bed_target)
+    return[bed_actual, bed_target]
     # Get target and current temperature
 
 def set_led():
-
+    # Code will go here
+    print(strip)
+    return
 if __name__ == '__main__':
     # Create NeoPixel object with appropriate configuration.
     strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL,
