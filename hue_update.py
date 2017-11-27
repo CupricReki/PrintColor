@@ -55,6 +55,7 @@ def octoprint_getstatus():
     return[bed_actual, bed_target]
     # Get target and current temperature
 
+
 def set_led(status):
     # [bed_actual, bed_target]
     bed_start = 25
@@ -62,8 +63,10 @@ def set_led(status):
     bed_actual = status[0]
     bed_target = status[1]
     temperature_percent = 100*((bed_actual - bed_start) / (bed_target - bed_start))
-    print temperature_percent
+    print int(rount(temperature_percent))
     return
+
+
 if __name__ == '__main__':
     # Create NeoPixel object with appropriate configuration.
     strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL,
