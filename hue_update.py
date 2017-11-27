@@ -37,7 +37,7 @@ from neopixel import *
 
 octoprint_api = '56D0FF611C184738B2CAE37CE1F7446F'
 octoprint_ip = 'printerpi.lan'
-LED_COUNT      = 220      # Number of LED pixels.
+LED_COUNT      = 100      # Number of LED pixels.
 LED_PIN        = 18      # GPIO pin connected to the pixels (must support PWM!).
 LED_FREQ_HZ    = 800000  # LED signal frequency in hertz (usually 800khz)
 LED_DMA        = 5       # DMA channel to use for generating signal (try 5)
@@ -66,7 +66,7 @@ def set_led(status):
     else:
         temperature_percent = 0
     print temperature_percent
-    for j in range(0, temperature_percent):
+    for j in xrange(0, temperature_percent):
         print j
         strip.setPixelColor(j, Color(255, 0, 0))
         strip.show()
@@ -81,7 +81,7 @@ if __name__ == '__main__':
                               LED_STRIP)
     # Intialize the library (must be called once before other functions).
     strip.begin()
-    for j in range(0, LED_COUNT):
+    for j in xrange(0, LED_COUNT):
         strip.setPixelColor(j, Color(0, 255, 0))
         strip.show()
     while True:
