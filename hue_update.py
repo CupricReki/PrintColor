@@ -45,8 +45,8 @@ LED_BRIGHTNESS = 100     # Set to 0 for darkest and 255 for brightest
 LED_INVERT     = False   # True to invert the signal (when using NPN transistor level shift)
 LED_CHANNEL    = 0
 LED_STRIP      = ws.SK6812_STRIP_RGBW
-bed_target_prev = 0
-temperature_percent = 0
+global bed_target_prev = 0
+global temperature_percent = 0
 
 def octoprint_getstatus():
     # Get current print state
