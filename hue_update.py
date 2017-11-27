@@ -45,9 +45,7 @@ LED_BRIGHTNESS = 100     # Set to 0 for darkest and 255 for brightest
 LED_INVERT     = False   # True to invert the signal (when using NPN transistor level shift)
 LED_CHANNEL    = 0
 LED_STRIP      = ws.SK6812_STRIP_RGBW
-global bed_target_prev = 0
-global temperature_percent = 0
-
+bed_target_prev = 0
 def octoprint_getstatus():
     # Get current print state
     request = requests.get('http://printerpi.lan/api/printer?history=true&limit=2', headers = {'X-Api-Key': '56D0FF611C184738B2CAE37CE1F7446F'})
@@ -62,15 +60,21 @@ def set_led(status):
     # [bed_actual, bed_target]
     bed_start = 25
     bed_actual = status[0]
-    bed_target = status[1]
+    bed_target_new = status[1]
     print status
-
     if bed_actual != bed_start:
-        if bed_target == 0 and bed_target_prev > 0:
-            temperature_percent = int(round(100*((bed_actual - bed_start) / (bed_target_prev - bed_start))))
+        if bed_target_new == 0 and bed_target_prev > 0:
+            bed_target = bed_target_prev
+
         else:
-            temperature_percent = int(round(100 * ((bed_actual - bed_start) / (bed_target - bed_start))))
-            bed_target_prev = bed_target
+            bed_target = bed_target_new
+    else:
+        bed_target = 0
+
+    temperature_percent = int(round(100 * ((bed_actual - bed_start) / (bed_target - bed_start))))
+
+    if temperature_percent < 0 :
+        temperature_percent = 0
 
     for j in xrange(0, temperature_percent):
         strip.setPixelColor(j, Color(0, 255, 0))
