@@ -13,7 +13,7 @@
 import requests
 import json
 import time
-from neopixel import *
+# from neopixel import *
 
 #Octoprint:
 # Use api key
@@ -65,10 +65,10 @@ def set_led():
     return
 if __name__ == '__main__':
     # Create NeoPixel object with appropriate configuration.
-    strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL,
-                              LED_STRIP)
+    #strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL,
+    # LED_STRIP)
     # Intialize the library (must be called once before other functions).
-    strip.begin()
+    #strip.begin()
     while True:
         print(octoprint_getstatus())
         print
