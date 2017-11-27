@@ -63,10 +63,14 @@ def set_led(status):
     bed_actual = status[0]
     bed_target = status[1]
     if bed_target != 0 or bed_target == bed_start:
-        temperature_percent = 100*((bed_actual - bed_start) / (bed_target - bed_start))
+        temperature_percent = int(round(100*((bed_actual - bed_start) / (bed_target - bed_start))))
     else:
         temperature_percent = 0
-    print int(round(temperature_percent))
+    for j in range(0, temperature_percent):
+        strip.setPixelColor(j, Color(255, 0, 0))
+        strip.show()
+
+
     return
 
 
@@ -76,6 +80,9 @@ if __name__ == '__main__':
                               LED_STRIP)
     # Intialize the library (must be called once before other functions).
     strip.begin()
+    for j in range(0, LED_COUNT):
+        strip.setPixelColor(j, Color(0, 255, 0))
+        strip.show()
     while True:
         status = octoprint_getstatus()
         set_led(status)
