@@ -61,9 +61,9 @@ def set_led(status):
     bed_start = 25
     bed_actual = status[0]
     bed_target = status[1]
-    if bed_target >= 0:
-        bed_target_last = bed_target
-    if bed_target != bed_start:
+
+
+    if bed_target != 0 or bed_target != bed_start:
         temperature_percent = int(round(100*((bed_actual - bed_start) / (bed_target - bed_start))))
     else:
         temperature_percent = 0
