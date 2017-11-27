@@ -62,6 +62,7 @@ def set_led(status):
     bed_actual = status[0]
     bed_target = status[1]
     print (bed_actual - bed_start)
+    print ((bed_target - bed_start))
     temperature_percent = (bed_actual - bed_start) / (bed_target - bed_start)
     print int(round(temperature_percent))
     return
