@@ -13,7 +13,8 @@
 import requests
 import json
 import time
-# from neopixel import *
+#from numpy import interp
+from neopixel import *
 
 #Octoprint:
 # Use api key
@@ -45,30 +46,28 @@ LED_INVERT     = False   # True to invert the signal (when using NPN transistor 
 LED_CHANNEL    = 0
 #LED_STRIP      = ws.SK6812_STRIP_RGBW
 
-
-# Initiate variables
-bed_start = 0
-
-
 def octoprint_getstatus():
     # Get current print state
     request = requests.get('http://printerpi.lan/api/printer?history=true&limit=2', headers = {'X-Api-Key': '56D0FF611C184738B2CAE37CE1F7446F'})
     parsed_request = json.loads(request.content)
-    bed_actual = parsed_request['temperature']['bed']['actual']
-    bed_target = parsed_request['temperature']['bed']['target']
+    bed_actual = parsed_request['temperature']['tool0']['actual']
+    bed_target = parsed_request['temperature']['tool0']['target']
     return[bed_actual, bed_target]
     # Get target and current temperature
 
-def set_led():
-    # Code will go here
-    print(strip)
+def set_led(status):
+    # [bed_actual, bed_target]
+    bed_start = 25
+    temperature_percent = (bed_actual - bed_start) / (bed_target - bed_start)
+    print int(round(temperature_percent))
     return
 if __name__ == '__main__':
     # Create NeoPixel object with appropriate configuration.
-    #strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL,
-    # LED_STRIP)
+    strip = Adafruit_NeoPixel(100, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL, LED_STRIP)
     # Intialize the library (must be called once before other functions).
-    #strip.begin()
+    strip.begin()
     while True:
-        print(octoprint_getstatus()[0])
+        status = octoprint_getstatus()
+        set_led(status)
         time.sleep(50)
+
