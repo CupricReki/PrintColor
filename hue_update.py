@@ -85,7 +85,7 @@ if __name__ == '__main__':
     # Intialize the library (must be called once before other functions).
     strip.begin()
 
-    for j in xrange(0, LED_COUNT):
+    for j in xrange(200, LED_COUNT):
         print j
         strip.setPixelColor(j, Color(0, 0, 255))
         strip.show()
