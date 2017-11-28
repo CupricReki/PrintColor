@@ -59,8 +59,8 @@ def octoprint_getstatus():
     # Get current print state
     request = requests.get('http://printerpi.lan/api/printer?history=true&limit=2', headers = {'X-Api-Key': '56D0FF611C184738B2CAE37CE1F7446F'})
     parsed_request = json.loads(request.content)
-    bed_actual = parsed_request['temperature']['tool0']['actual']
-    bed_target = parsed_request['temperature']['tool0']['target']
+    bed_actual = parsed_request['temperature']['bed']['actual']
+    bed_target = parsed_request['temperature']['bed']['target']
     return[bed_actual, bed_target]
     # Get target and current temperature
 
@@ -76,15 +76,14 @@ def set_led(status):
 
     if bed_target_new == 0 and bed_target_prev > 0:
         # Will allow for tracking after heater disabled.
-        temperature_percent = int(round(((bed_actual - bed_start) / (bed_target_prev - bed_start))))
+        bed_target = bed_target_prev
 
     else:
-        temperature_percent = int(round((bed_actual - bed_start) / (bed_target_new - bed_start)))
-
+        bed_target = bed_target_new
+    temperature_percent = int(round(100 * ((bed_actual - bed_start) / (bed_target - bed_start))))
     if temperature_percent < 0 :
         temperature_percent = 0
 
-    print temperature_percent
     for j in xrange(0, temperature_percent):
         strip.setPixelColor(LED_COUNT - j, Color(0, 255, 0))
     strip.show()
