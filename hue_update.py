@@ -59,8 +59,8 @@ def octoprint_getstatus():
     # Get current print state
     request = requests.get('http://printerpi.lan/api/printer?history=true&limit=2', headers = {'X-Api-Key': '56D0FF611C184738B2CAE37CE1F7446F'})
     parsed_request = json.loads(request.content)
-    bed_actual = parsed_request['temperature']['bed']['actual']
-    bed_target = parsed_request['temperature']['bed']['target']
+    bed_actual = parsed_request['temperature']['tool0']['actual']
+    bed_target = parsed_request['temperature']['tool0']['target']
     return[bed_actual, bed_target]
     # Get target and current temperature
 
