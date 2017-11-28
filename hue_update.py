@@ -70,7 +70,7 @@ def set_led(status):
 
     for j in xrange(0, temperature_percent):
         print j
-        strip.setPixelColor(j, Color(0, 255, 0))
+        strip.setPixelColor(LED_COUNT - j, Color(0, 255, 0))
     strip.show()
 
 
@@ -85,11 +85,9 @@ if __name__ == '__main__':
     # Intialize the library (must be called once before other functions).
     strip.begin()
 
-    for j in xrange(200, LED_COUNT):
-        print j
+    for j in xrange(0, LED_COUNT):
         strip.setPixelColor(j, Color(0, 0, 255))
-        strip.show()
-        time.sleep(1)
+    strip.show()
     while True:
         status = octoprint_getstatus()
         set_led(status)
