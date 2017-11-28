@@ -95,6 +95,7 @@ def set_led(status):
     temperature_percentage_new =  temperature_percent
 
     if temperature_percentage_old != temperature_percentage_new:
+        print int(round(LED_range*(temperature_percent/100)))
         for j in xrange(0, int(round(LED_range*(temperature_percent/100)))):
             print j
             strip.setPixelColor(LED_COUNT - j, Color(0, 255, 0))
