@@ -76,11 +76,10 @@ def set_led(status):
 
     if bed_target_new == 0 and bed_target_prev > 0:
         # Will allow for tracking after heater disabled.
-        bed_target = bed_target_prev
+        temperature_percent = int(round(((bed_actual - bed_start) / (bed_target_prev - bed_start))))
 
     else:
-        bed_target = bed_target_new
-    temperature_percent = int(round(100 * ((bed_actual - bed_start) / (bed_target - bed_start))))
+        temperature_percent = int(round((bed_actual - bed_start) / (bed_target_new - bed_start)))
 
     if temperature_percent < 0 :
         temperature_percent = 0
