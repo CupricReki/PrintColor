@@ -45,10 +45,15 @@ LED_BRIGHTNESS = 100     # Set to 0 for darkest and 255 for brightest
 LED_INVERT     = False   # True to invert the signal (when using NPN transistor level shift)
 LED_CHANNEL    = 0
 LED_STRIP      = ws.SK6812_STRIP_RGBW
-bed_target_prev = None
-bed_target_new = None
+
+
+bed_target_prev = 0
+bed_target_new = 0
+temperature_percentage_new = 0
+temperature_percentage_old = 0
 LED_min = 10
 LED_max = 255
+LED_range = 20
 
 
 def octoprint_getstatus():
@@ -73,15 +78,27 @@ def set_led(status):
     if bed_target_new == 0 and bed_target_prev > 0:
         # Will allow for tracking after heater disabled.
         bed_target = bed_target_prev
+
     else:
         bed_target = bed_target_new
     temperature_percent = int(round(100 * ((bed_actual - bed_start) / (bed_target - bed_start))))
+
     if temperature_percent < 0 :
         temperature_percent = 0
 
-    for j in xrange(0, temperature_percent):
-        strip.setPixelColor(LED_COUNT - j, Color(0, 255, 0))
-    strip.show()
+    print temperature_percent
+
+    global temperature_percentage_old
+    global temperature_percentage_new
+
+    temperature_percentage_old = temperature_percentage_new
+    temperature_percentage_new =  temperature_percent
+
+    if temperature_percentage_old != temperature_percentage_new:
+        for j in xrange(0, int(round(LED_range*(temperature_percent/100)))):
+            print j
+            strip.setPixelColor(LED_COUNT - j, Color(0, 255, 0))
+        strip.show()
 
     return
 
@@ -99,5 +116,5 @@ if __name__ == '__main__':
     while True:
         status = octoprint_getstatus()
         set_led(status)
-        time.sleep(0.01)
+        time.sleep(0.1)
 
