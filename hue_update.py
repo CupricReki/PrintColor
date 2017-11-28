@@ -86,8 +86,10 @@ if __name__ == '__main__':
     strip.begin()
 
     for j in xrange(0, LED_COUNT):
+        print j
         strip.setPixelColor(j, Color(0, 0, 255))
         strip.show()
+        time.sleep(1)
     while True:
         status = octoprint_getstatus()
         set_led(status)
