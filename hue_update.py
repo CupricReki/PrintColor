@@ -53,7 +53,6 @@ temperature_percentage_new = 0
 temperature_percentage_old = 0
 LED_min = 10
 LED_max = 255
-LED_range = 20
 
 
 def octoprint_getstatus():
@@ -87,21 +86,9 @@ def set_led(status):
         temperature_percent = 0
 
     print temperature_percent
-
-    global temperature_percentage_old
-    global temperature_percentage_new
-
-    temperature_percentage_old = temperature_percentage_new
-    temperature_percentage_new =  temperature_percent
-
-    print [temperature_percentage_old, temperature_percentage_new, temperature_percent]
-
-    if temperature_percentage_old != temperature_percentage_new:
-        print int(round(LED_range*(temperature_percent/100)))
-        for j in xrange(0, int(round(LED_range*(temperature_percent/100)))):
-            print j
-            strip.setPixelColor(LED_COUNT - j, Color(0, 255, 0))
-        strip.show()
+    for j in xrange(0, temperature_percent):
+        strip.setPixelColor(LED_COUNT - j, Color(0, 255, 0))
+    strip.show()
 
     return
 
