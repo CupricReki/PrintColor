@@ -13,10 +13,10 @@
 import requests
 import json
 import time
-#from numpy import interp
+# from numpy import interp
 from neopixel import *
 
-#Octoprint:
+# Octoprint:
 # Use api key
 # http://docs.octoprint.org/en/master/api/
 
@@ -30,22 +30,23 @@ from neopixel import *
 # color converter
 
 
-
 # debug flag
 # debug = 0 - off
 # debug = 1 -
 
 octoprint_api = '56D0FF611C184738B2CAE37CE1F7446F'
 octoprint_ip = 'printerpi.lan'
-LED_COUNT      = 220      # Number of LED pixels.
-LED_PIN        = 18      # GPIO pin connected to the pixels (must support PWM!).
-LED_FREQ_HZ    = 800000  # LED signal frequency in hertz (usually 800khz)
-LED_DMA        = 5       # DMA channel to use for generating signal (try 5)
-LED_BRIGHTNESS = 100     # Set to 0 for darkest and 255 for brightest
-LED_INVERT     = False   # True to invert the signal (when using NPN transistor level shift)
-LED_CHANNEL    = 0
-LED_STRIP      = ws.SK6812_STRIP_RGBW
+LED_COUNT = 61  # Number of LED pixels.
+LED_PIN = 18  # GPIO pin connected to the pixels (must support PWM!).
+LED_FREQ_HZ = 800000  # LED signal frequency in hertz (usually 800khz)
+LED_DMA = 5  # DMA channel to use for generating signal (try 5)
+LED_BRIGHTNESS = 100  # Set to 0 for darkest and 255 for brightest
+LED_INVERT = False  # True to invert the signal (when using NPN transistor level shift)
+LED_CHANNEL = 0
+LED_STRIP = ws.SK6812_STRIP_RGBW
 
+# Bed = 61 Lights
+# Heat =
 
 bed_target_prev = 0
 bed_target_new = 0
@@ -53,42 +54,64 @@ temperature_percentage_new = 0
 temperature_percentage_old = 0
 LED_min = 10
 LED_max = 255
+temperature_ambient = 25.0  # Ambient temperature in C
 
 
 def octoprint_getstatus():
+    # TODO make function more ambiguous
     # Get current print state
-    request = requests.get('http://printerpi.lan/api/printer?history=true&limit=2', headers = {'X-Api-Key': '56D0FF611C184738B2CAE37CE1F7446F'})
+    request = requests.get('http://printerpi.lan/api/printer?history=true&limit=2',
+                           headers={'X-Api-Key': '56D0FF611C184738B2CAE37CE1F7446F'})
     parsed_request = json.loads(request.content)
     bed_actual = parsed_request['temperature']['bed']['actual']
     bed_target = parsed_request['temperature']['bed']['target']
-    return[bed_actual, bed_target]
+    return [bed_actual, bed_target]
     # Get target and current temperature
 
+
 def set_led(status):
+    # TODO distinguish between heatup and cooldown
     # [bed_actual, bed_target]
-    bed_start = 25
     bed_actual = status[0]
     global bed_target_prev
     global bed_target_new
-    bed_target_prev = bed_target_new
     bed_target_new = status[1]
-    print status
 
     if bed_target_new == 0 and bed_target_prev > 0:
         # Will allow for tracking after heater disabled.
         bed_target = bed_target_prev
 
     else:
+        bed_target_prev = bed_target_new
         bed_target = bed_target_new
-    temperature_percent = int(round(100 * ((bed_actual - bed_start) / (bed_target - bed_start))))
-    if temperature_percent < 0 :
-        temperature_percent = 0
 
-    for j in xrange(0, temperature_percent):
-        strip.setPixelColor(LED_COUNT - j, Color(0, 255, 0))
-    strip.show()
+    temperature_percent = int(
+        round(100 * (float((bed_actual - temperature_ambient)) / (bed_target - temperature_ambient))))
+    print 'temperature percentage before: {}'.format(temperature_percent)
+    if temperature_percent < temperature_ambient:
+        temperature_percent = temperature_ambient
+
+    elif temperature_percent > 100:
+        temperature_percent = 100
+    print 'temperature percentage after: {}'.format(temperature_percent)
+
+    LED_current = int(round(LED_COUNT * (float(temperature_percent) / 100.0)))
+    print LED_current
+    print [status, temperature_percent]
+
+    for j in xrange(0, LED_current):
+        # Set LEDs to RED
+        strip.setPixelColor(j, Color(0, 255, 0))
+        strip.show()
+
+    for j in xrange(LED_current, LED_COUNT):
+        # Set the rest of the LEDs color
+        # Set LEDs to Blue
+        strip.setPixelColor(j, Color(0, 0, 255))
+        strip.show()
 
     return
+
 
 if __name__ == '__main__':
 
@@ -98,11 +121,8 @@ if __name__ == '__main__':
     # Intialize the library (must be called once before other functions).
     strip.begin()
 
-    for j in xrange(0, LED_COUNT):
-        strip.setPixelColor(j, Color(0, 0, 255))
-    strip.show()
     while True:
         status = octoprint_getstatus()
         set_led(status)
-        time.sleep(0.1)
+        time.sleep(0.5)
 
