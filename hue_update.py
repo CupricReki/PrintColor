@@ -52,8 +52,8 @@ bed_target_prev = 0
 bed_target_new = 0
 temperature_percentage_new = 0
 temperature_percentage_old = 0
-LED_min = 10
-LED_max = 255
+LED_min_value = 10
+LED_max_value = 255
 temperature_ambient = 25.0  # Ambient temperature in C
 
 
@@ -75,19 +75,12 @@ def set_led(status):
     bed_actual = status[0]
     bed_target = status[1]
 
-    temperature_percent = int(
-        round(100 * ((bed_actual - temperature_ambient) / (bed_target - temperature_ambient))))
+    temperature_percent = float(get_percent(temperature_ambient, bed_target, bed_actual))
 
     print 'status values: {}, {}'.format(bed_actual, bed_target)
-    print 'temperature percentage before: {}'.format(temperature_percent)
-    if temperature_percent < temperature_ambient:
-        temperature_percent = 0
+    print 'temperature percentage: {}'.format(temperature_percent)
 
-    elif temperature_percent > 100:
-        temperature_percent = 100
-    print 'temperature percentage after: {}'.format(temperature_percent)
-
-    LED_current = int(round(LED_COUNT * (float(temperature_percent) / 100.0)))
+    LED_current = int(round(LED_COUNT * (temperature_percent / 100.0)))
     print 'led_current: {}'.format(LED_current)
 
 
@@ -104,6 +97,18 @@ def set_led(status):
 
     return
 
+def get_percent(min_value, max_value, actual):
+    # actual value may be outside the range [min_value, max_value]
+    # returns 0 if actual < min_value and 100 if actual > max_value
+    percent = int(round( 100 * ((actual - min_value) / (max_value - min_value))))
+    if percent < 0:
+        percent = 0
+
+    elif percent > 100:
+        percent = 100
+
+    # returns integer
+    return [percent]
 
 if __name__ == '__main__':
 
