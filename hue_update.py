@@ -58,7 +58,6 @@ temperature_ambient = 25.0  # Ambient temperature in C
 
 
 def octoprint_getstatus():
-    # TODO make function more ambiguous
     # Get current print state
     request = requests.get('http://printerpi.lan/api/printer?history=true&limit=2',
                            headers={'X-Api-Key': '56D0FF611C184738B2CAE37CE1F7446F'})
@@ -70,34 +69,27 @@ def octoprint_getstatus():
 
 
 def set_led(status):
-    # TODO distinguish between heatup and cooldown
+    # TODO
     # [bed_actual, bed_target]
+    print "\n"
     bed_actual = status[0]
-    global bed_target_prev
-    global bed_target_new
-    bed_target_new = status[1]
-
-    if bed_target_new == 0 and bed_target_prev > 0:
-        # Will allow for tracking after heater disabled.
-        bed_target = bed_target_prev
-
-    else:
-        bed_target_prev = bed_target_new
-        bed_target = bed_target_new
+    bed_target = status[1]
 
     temperature_percent = int(
-        round(100 * (float((bed_actual - temperature_ambient)) / (bed_target - temperature_ambient))))
+        round(100 * ((bed_actual - temperature_ambient) / (bed_target - temperature_ambient))))
+
+    print 'status values: {}, {}'.format(bed_actual, bed_target)
     print 'temperature percentage before: {}'.format(temperature_percent)
     if temperature_percent < temperature_ambient:
-        temperature_percent = temperature_ambient
+        temperature_percent = 0
 
     elif temperature_percent > 100:
         temperature_percent = 100
     print 'temperature percentage after: {}'.format(temperature_percent)
 
     LED_current = int(round(LED_COUNT * (float(temperature_percent) / 100.0)))
-    print LED_current
-    print [status, temperature_percent]
+    print 'led_current: {}'.format(LED_current)
+
 
     for j in xrange(0, LED_current):
         # Set LEDs to RED
