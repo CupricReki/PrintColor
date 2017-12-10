@@ -83,10 +83,13 @@ def set_led(status):
 
 
         rgb_red = map_range(0, 100, cooldown_percent, 0, 255)
+        print cooldown_percent
+        print [0, rgb_red, 255 - rgb_red]
 
         for j in xrange(0, LED_COUNT):
             # Set the rest of the LEDs color
             # Set LEDs to Blue
+
             strip.setPixelColor(j, Color(0, rgb_red, 255 - rgb_red))
             strip.show()
     else:
