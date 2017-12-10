@@ -62,14 +62,10 @@ def octoprint_getstatus(object, value, status):
     request = requests.get('http://printerpi.lan/api/printer?history=true&limit=2',
                            headers={'X-Api-Key': '56D0FF611C184738B2CAE37CE1F7446F'})
     parsed_request = json.loads(request.content)
-    bed_actual = parsed_request[value, object, status]
-    bed_target = parsed_request[value, object, status]
-    return [temp_actual, temp_target]
-    # Get target and current temperature
-
+    value_read = parsed_request[value, object, status]
+    return value_read
 
 def set_led(status):
-    # TODO
     # [bed_actual, bed_target]
     # Color(green, red, blue)
     print "\n"
@@ -145,7 +141,10 @@ if __name__ == '__main__':
     strip.begin()
 
     while True:
-        status = octoprint_getstatus('tool0', 'temperature', 'value')
+
+        # Get tool0 temperature
+        status = octoprint_getstatus('tool0', 'temperature', 'actual'), \
+                 octoprint_getstatus('tool0', 'temperature', 'target')
         set_led(status)
         time.sleep(0.04)
 
