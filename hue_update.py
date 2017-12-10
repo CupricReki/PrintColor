@@ -110,8 +110,8 @@ def set_led(status):
 
         for j in xrange(LED_current, LED_COUNT):
             # Set the rest of the LEDs color
-            # Set LEDs to Blue
-            strip.setPixelColor(j, Color(0, 0, 255))
+            # Set LEDs to Green
+            strip.setPixelColor(j, Color(255, 0, 0))
             strip.show()
 
     return
@@ -147,5 +147,5 @@ if __name__ == '__main__':
     while True:
         status = octoprint_getstatus('tool0', 'temperature', 'value')
         set_led(status)
-        time.sleep(0.04
+        time.sleep(0.04)
 
