@@ -57,40 +57,41 @@ LED_max_value = 255
 temperature_ambient = 25.0  # Ambient temperature in C
 
 
-def octoprint_getstatus():
+def octoprint_getstatus(object, value, status):
     # Get current print state
     request = requests.get('http://printerpi.lan/api/printer?history=true&limit=2',
                            headers={'X-Api-Key': '56D0FF611C184738B2CAE37CE1F7446F'})
     parsed_request = json.loads(request.content)
-    bed_actual = parsed_request['temperature']['tool0']['actual']
-    bed_target = parsed_request['temperature']['tool0']['target']
-    return [bed_actual, bed_target]
+    bed_actual = parsed_request[value, object, status]
+    bed_target = parsed_request[value, object, status]
+    return [temp_actual, temp_target]
     # Get target and current temperature
 
 
 def set_led(status):
     # TODO
     # [bed_actual, bed_target]
+    # Color(green, red, blue)
     print "\n"
     bed_actual = status[0]
     bed_target = status[1]
 
     if bed_target == 0:
         # When bed isn't heating up just show colors
-        print 'Cooldown detected'
+        print 'cooldown detected'
         # For the bed, we assume a maximum temperature of 120 degrees
         cooldown_percent = get_percent(temperature_ambient, 240, bed_actual)
 
 
         rgb_red = map_range(0, 100, cooldown_percent, 0, 255)
-        print cooldown_percent
+        print 'cooldown_percentage: {}'.format(cooldown_percent)
         print [0, rgb_red, 255 - rgb_red]
 
         for j in xrange(0, LED_COUNT):
             # Set the rest of the LEDs color
             # Set LEDs to Blue
 
-            strip.setPixelColor(j, Color(0, rgb_red, 255 - rgb_red))
+            strip.setPixelColor(j, Color(255 - rgb_red, rgb_red, 0))
             strip.show()
     else:
         temperature_percent = get_percent(temperature_ambient, bed_target, bed_actual)
@@ -144,7 +145,7 @@ if __name__ == '__main__':
     strip.begin()
 
     while True:
-        status = octoprint_getstatus()
+        status = octoprint_getstatus('tool0', 'temperature', 'value')
         set_led(status)
-        time.sleep(0.1)
+        time.sleep(0.04
 
