@@ -62,7 +62,7 @@ def octoprint_getstatus(object, value, status):
     request = requests.get('http://printerpi.lan/api/printer?history=true&limit=2',
                            headers={'X-Api-Key': '56D0FF611C184738B2CAE37CE1F7446F'})
     parsed_request = json.loads(request.content)
-    value_read = parsed_request[value, object, status]
+    value_read = parsed_request[value][object][status]
     return value_read
 
 def set_led(status):
