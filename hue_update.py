@@ -79,7 +79,7 @@ def set_led(status):
         # When bed isn't heating up just show colors
         print 'Cooldown detected'
         # For the bed, we assume a maximum temperature of 120 degrees
-        cooldown_percent = get_percent(temperature_ambient, 120, bed_actual)
+        cooldown_percent = get_percent(temperature_ambient, 240, bed_actual)
 
 
         rgb_red = map_range(0, 100, cooldown_percent, 0, 255)
@@ -143,5 +143,5 @@ if __name__ == '__main__':
     while True:
         status = octoprint_getstatus()
         set_led(status)
-        time.sleep(0.5)
+        time.sleep(0.1)
 
