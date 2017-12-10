@@ -62,8 +62,8 @@ def octoprint_getstatus():
     request = requests.get('http://printerpi.lan/api/printer?history=true&limit=2',
                            headers={'X-Api-Key': '56D0FF611C184738B2CAE37CE1F7446F'})
     parsed_request = json.loads(request.content)
-    bed_actual = parsed_request['temperature']['bed']['actual']
-    bed_target = parsed_request['temperature']['bed']['target']
+    bed_actual = parsed_request['temperature']['tool0']['actual']
+    bed_target = parsed_request['temperature']['tool0']['target']
     return [bed_actual, bed_target]
     # Get target and current temperature
 
@@ -75,25 +75,41 @@ def set_led(status):
     bed_actual = status[0]
     bed_target = status[1]
 
-    temperature_percent = float(get_percent(temperature_ambient, bed_target, bed_actual))
-
-    print 'status values: {}, {}'.format(bed_actual, bed_target)
-    print 'temperature percentage: {}'.format(temperature_percent)
-
-    LED_current = int(round(LED_COUNT * (temperature_percent / 100.0)))
-    print 'led_current: {}'.format(LED_current)
+    if bed_target == 0:
+        # When bed isn't heating up just show colors
+        print 'Cooldown detected'
+        # For the bed, we assume a maximum temperature of 120 degrees
+        cooldown_percent = get_percent(temperature_ambient, 120, bed_actual)
 
 
-    for j in xrange(0, LED_current):
-        # Set LEDs to RED
-        strip.setPixelColor(j, Color(0, 255, 0))
-        strip.show()
+        rgb_red = map_range(0, 100, cooldown_percent, 0, 255)
 
-    for j in xrange(LED_current, LED_COUNT):
-        # Set the rest of the LEDs color
-        # Set LEDs to Blue
-        strip.setPixelColor(j, Color(0, 0, 255))
-        strip.show()
+        color = [0, rgb_red, 255 - rgb_red]
+        for j in xrange(0, LED_COUNT):
+            # Set the rest of the LEDs color
+            # Set LEDs to Blue
+            strip.setPixelColor(j, color)
+            strip.show()
+    else:
+        temperature_percent = get_percent(temperature_ambient, bed_target, bed_actual)
+
+        print 'status values: {}, {}'.format(bed_actual, bed_target)
+        print 'temperature percentage: {}'.format(temperature_percent)
+
+        LED_current = int(round(LED_COUNT * (float(temperature_percent) / 100.0)))
+        print 'led_current: {}'.format(LED_current)
+
+
+        for j in xrange(0, LED_current):
+            # Set LEDs to RED
+            strip.setPixelColor(j, Color(0, 255, 0))
+            strip.show()
+
+        for j in xrange(LED_current, LED_COUNT):
+            # Set the rest of the LEDs color
+            # Set LEDs to Blue
+            strip.setPixelColor(j, Color(0, 0, 255))
+            strip.show()
 
     return
 
@@ -108,7 +124,14 @@ def get_percent(min_value, max_value, actual):
         percent = 100
 
     # returns integer
-    return [percent]
+    return percent
+
+def map_range(in_min, in_max, actual, out_min, out_max):
+    # maps an input range and actual value to an output range
+
+  return int(round((float(actual) - in_min) * (out_max - out_min) / (in_max - in_min) + out_min))
+
+
 
 if __name__ == '__main__':
 
